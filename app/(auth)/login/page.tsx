@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [anonLoading, setAnonLoading] = useState(false);
 
@@ -26,7 +28,7 @@ export default function LoginPage() {
       const supabase = createClient();
       const { error } = await supabase.auth.signInAnonymously();
       if (error) throw error;
-      window.location.href = "/";
+      router.push("/");
     } catch {
       setAnonLoading(false);
     }
