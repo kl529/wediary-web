@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #000000;
+  --color-surface: #111111;
+  --color-surface-alt: #1A1A1A;
+  --color-text: #FFFFFF;
+  --color-text-muted: #A3A3A3;
+  --color-text-faint: #616161;
+  --color-border: #2A2A2A;
+  --color-accent: #FF1493;
+  --color-accent-light: #3D0A1E;
+  --color-attending: #CCFF00;
+  --color-attending-light: #1A2600;
+  --color-absent: #FF1493;
+  --color-undecided: #616161;
+
+  --font-fredoka: 'Fredoka', sans-serif;
+  --font-gaegu: 'Gaegu', cursive;
+  --font-pretendard: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+html, body {
+  background-color: #000000;
+  color: #FFFFFF;
+  font-family: var(--font-pretendard);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Safe area support */
+.safe-top { padding-top: env(safe-area-inset-top); }
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+
+/* Scrollbar hide utility */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Input autofill override */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 100px #1A1A1A inset !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+  caret-color: #FFFFFF;
+}
