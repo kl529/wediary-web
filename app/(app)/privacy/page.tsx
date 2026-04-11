@@ -110,7 +110,7 @@ export default function PrivacyPage() {
             <p>
               개인정보 처리에 관한 문의는 아래로 연락주세요:
             </p>
-            <p style={{ marginTop: 8, color: "#FF1493" }}>wediary@example.com</p>
+            <p style={{ marginTop: 8, color: "#FF1493" }}>lyvakim@gmail.com</p>
           </Section>
         </div>
       </div>

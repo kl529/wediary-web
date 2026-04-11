@@ -9,7 +9,7 @@ import type { Wedding } from "@/lib/types";
 export default function HomePage() {
   const [tab, setTab] = useState<"upcoming" | "past">("upcoming");
 
-  const { data: weddings = [], isLoading } = useQuery({
+  const { data: weddings = [], isLoading, isError } = useQuery({
     queryKey: ["weddings"],
     queryFn: getWeddings,
   });
@@ -81,6 +81,8 @@ export default function HomePage() {
         <div style={{ flex: 1, padding: "16px 16px 100px", overflowY: "auto" }}>
           {isLoading ? (
             <LoadingSkeleton />
+          ) : isError ? (
+            <EmptyState tab={tab} />
           ) : displayed.length === 0 ? (
             <EmptyState tab={tab} />
           ) : (
@@ -191,7 +193,7 @@ function WeddingCard({ wedding }: { wedding: Wedding }) {
   const upcoming = isUpcoming(wedding.date);
 
   return (
-    <Link href={`/${wedding.id}`} style={{ textDecoration: "none" }}>
+    <Link href={`/${wedding.id}`} style={{ textDecoration: "none" }} aria-label={`${wedding.groom} ♥ ${wedding.bride}, ${formatDateKR(wedding.date)}`}>
       <div
         style={{
           backgroundColor: "#111111",
