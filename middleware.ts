@@ -42,7 +42,11 @@ export async function middleware(request: NextRequest) {
     pathname === "/manifest.webmanifest" ||
     pathname.startsWith("/_next") ||
     pathname.startsWith("/icons") ||
-    pathname.startsWith("/api");
+    pathname.startsWith("/api") ||
+    pathname === "/sw.js" ||
+    pathname.startsWith("/workbox-") ||
+    pathname === "/fallback-" ||
+    pathname.startsWith("/swe-worker");
 
   if (!user && !isPublicPath) {
     const url = request.nextUrl.clone();
