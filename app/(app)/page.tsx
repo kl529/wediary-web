@@ -57,10 +57,12 @@ export default function HomePage() {
         {/* Tabs */}
         <div
           style={{
-            padding: "16px 16px 0",
             display: "flex",
-            gap: 24,
-            borderBottom: "1px solid #2A2A2A",
+            gap: 4,
+            backgroundColor: "rgba(255,255,255,0.05)",
+            borderRadius: 12,
+            margin: "12px 16px 0",
+            padding: "4px",
           }}
         >
           <TabButton
@@ -78,7 +80,7 @@ export default function HomePage() {
         </div>
 
         {/* Content */}
-        <div style={{ flex: 1, padding: "16px 16px 100px", overflowY: "auto" }}>
+        <div style={{ flex: 1, padding: "16px 16px 100px", overflowY: "auto", marginTop: 8 }}>
           {isLoading ? (
             <LoadingSkeleton />
           ) : isError ? (
@@ -134,18 +136,21 @@ function TabButton({
     <button
       onClick={onClick}
       style={{
-        background: "none",
+        flex: 1,
         border: "none",
         cursor: "pointer",
-        padding: "0 0 12px",
-        borderBottom: active ? "2px solid #FF1493" : "2px solid transparent",
+        padding: "8px 0",
+        borderRadius: 8,
+        backgroundColor: active ? "#FF1493" : "transparent",
         display: "flex",
         alignItems: "center",
+        justifyContent: "center",
         gap: 6,
-        color: active ? "#FF1493" : "#A3A3A3",
-        fontSize: 15,
-        fontWeight: active ? 600 : 400,
+        color: active ? "#000000" : "rgba(255,255,255,0.4)",
+        fontSize: 14,
+        fontWeight: 600,
         fontFamily: "var(--font-pretendard), Pretendard Variable, sans-serif",
+        transition: "all 0.15s ease",
       }}
     >
       {label}
@@ -154,8 +159,8 @@ function TabButton({
           style={{
             fontSize: 11,
             fontWeight: 600,
-            backgroundColor: active ? "#3D0A1E" : "#1A1A1A",
-            color: active ? "#FF1493" : "#616161",
+            backgroundColor: active ? "rgba(0,0,0,0.2)" : "rgba(255,255,255,0.1)",
+            color: active ? "#000000" : "rgba(255,255,255,0.4)",
             borderRadius: 9999,
             padding: "1px 6px",
           }}
@@ -283,40 +288,36 @@ function EmptyState({ tab }: { tab: "upcoming" | "past" }) {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        gap: 16,
+        gap: 8,
         paddingTop: 80,
       }}
     >
-      <span style={{ fontSize: 48 }}>💌</span>
+      <MailIcon />
       <p
         style={{
-          color: "#616161",
-          fontSize: 15,
+          color: "rgba(255,255,255,0.4)",
+          fontSize: 14,
           textAlign: "center",
+          marginTop: 8,
           fontFamily: "var(--font-pretendard), Pretendard Variable, sans-serif",
         }}
       >
         {tab === "upcoming"
           ? "예정된 결혼식이 없어요"
-          : "지난 결혼식이 없어요"}
+          : "아직 기록이 없어요"}
       </p>
-      {tab === "upcoming" && (
-        <Link
-          href="/new"
-          style={{
-            backgroundColor: "#FF1493",
-            color: "#FFFFFF",
-            fontSize: 14,
-            fontWeight: 600,
-            padding: "10px 20px",
-            borderRadius: 9999,
-            textDecoration: "none",
-            fontFamily: "var(--font-pretendard), Pretendard Variable, sans-serif",
-          }}
-        >
-          + 결혼식 추가하기
-        </Link>
-      )}
+      <p
+        style={{
+          color: "rgba(255,255,255,0.2)",
+          fontSize: 12,
+          textAlign: "center",
+          fontFamily: "var(--font-pretendard), Pretendard Variable, sans-serif",
+        }}
+      >
+        {tab === "upcoming"
+          ? "오른쪽 아래 + 버튼으로 추가해보세요"
+          : "지난 결혼식을 추가하면 여기에 나타나요"}
+      </p>
     </div>
   );
 }
@@ -338,6 +339,15 @@ function LoadingSkeleton() {
         />
       ))}
     </div>
+  );
+}
+
+function MailIcon() {
+  return (
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="4" width="20" height="16" rx="2" />
+      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+    </svg>
   );
 }
 

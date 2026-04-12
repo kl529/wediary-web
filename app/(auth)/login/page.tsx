@@ -28,7 +28,7 @@ export default function LoginPage() {
       const supabase = createClient();
       const { error } = await supabase.auth.signInAnonymously();
       if (error) throw error;
-      router.push("/");
+      window.location.href = "/";
     } catch {
       setAnonLoading(false);
     }
@@ -42,10 +42,10 @@ export default function LoginPage() {
           <h1
             style={{
               fontFamily: "var(--font-fredoka), Fredoka, sans-serif",
-              fontSize: 40,
+              fontSize: 48,
               fontWeight: 600,
               color: "#FF1493",
-              letterSpacing: "-0.02em",
+              letterSpacing: "0.05em",
               lineHeight: 1,
             }}
           >
@@ -55,16 +55,13 @@ export default function LoginPage() {
             style={{
               fontFamily: "var(--font-pretendard), Pretendard Variable, sans-serif",
               fontSize: 13,
-              color: "#A3A3A3",
+              color: "rgba(255,255,255,0.6)",
               fontWeight: 400,
             }}
           >
-            결혼식 기록 다이어리
+            결혼식 기억을 모아두는 다이어리
           </p>
         </div>
-
-        {/* Decorative element */}
-        <div className="text-4xl select-none">💌</div>
 
         {/* Buttons */}
         <div className="w-full flex flex-col gap-3">
@@ -76,27 +73,16 @@ export default function LoginPage() {
               color: "#000000",
               fontFamily: "var(--font-pretendard), Pretendard Variable, sans-serif",
               fontSize: 16,
-              fontWeight: 700,
-              borderRadius: 9999,
-              padding: "14px 0",
+              fontWeight: 600,
+              borderRadius: 12,
+              padding: "16px 32px",
               width: "100%",
               border: "none",
               cursor: loading ? "not-allowed" : "pointer",
               opacity: loading ? 0.7 : 1,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 8,
             }}
           >
-            {loading ? (
-              "로그인 중..."
-            ) : (
-              <>
-                <KakaoIcon />
-                카카오로 시작하기
-              </>
-            )}
+            {loading ? "로그인 중..." : "카카오로 시작하기"}
           </button>
 
           <button
