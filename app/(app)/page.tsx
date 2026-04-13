@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-import { getWeddings, formatDateKR, getDDay, isUpcoming } from "@/lib/db";
+import { getWeddings, formatDateKR, isUpcoming } from "@/lib/db";
 import type { Wedding } from "@/lib/types";
 
 export default function HomePage() {
@@ -24,7 +24,7 @@ export default function HomePage() {
         {/* Header */}
         <header
           style={{
-            padding: "16px 16px 0",
+            padding: "16px 24px 0",
             paddingTop: "max(16px, env(safe-area-inset-top))",
           }}
           className="flex items-center justify-between"
@@ -43,7 +43,7 @@ export default function HomePage() {
           <Link
             href="/settings"
             style={{
-              color: "#A3A3A3",
+              color: "rgba(255,255,255,0.6)",
               padding: 8,
               borderRadius: 8,
               display: "flex",
@@ -61,7 +61,7 @@ export default function HomePage() {
             gap: 4,
             backgroundColor: "rgba(255,255,255,0.05)",
             borderRadius: 12,
-            margin: "12px 16px 0",
+            margin: "12px 24px 0",
             padding: "4px",
           }}
         >
@@ -80,7 +80,7 @@ export default function HomePage() {
         </div>
 
         {/* Content */}
-        <div style={{ flex: 1, padding: "16px 16px 100px", overflowY: "auto", marginTop: 8 }}>
+        <div style={{ flex: 1, padding: "16px 24px 100px", overflowY: "auto", marginTop: 8 }}>
           {isLoading ? (
             <LoadingSkeleton />
           ) : isError ? (
@@ -145,7 +145,6 @@ function TabButton({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        gap: 6,
         color: active ? "#000000" : "rgba(255,255,255,0.4)",
         fontSize: 14,
         fontWeight: 600,
@@ -153,128 +152,150 @@ function TabButton({
         transition: "all 0.15s ease",
       }}
     >
-      {label}
-      {badge > 0 && (
-        <span
-          style={{
-            fontSize: 11,
-            fontWeight: 600,
-            backgroundColor: active ? "rgba(0,0,0,0.2)" : "rgba(255,255,255,0.1)",
-            color: active ? "#000000" : "rgba(255,255,255,0.4)",
-            borderRadius: 9999,
-            padding: "1px 6px",
-          }}
-        >
-          {badge}
-        </span>
-      )}
+      {label} {badge > 0 ? `(${badge})` : ""}
     </button>
   );
 }
 
 function WeddingCard({ wedding }: { wedding: Wedding }) {
-  const attendanceColor =
+  const stripColor =
     wedding.attendance === "attending"
       ? "#CCFF00"
       : wedding.attendance === "absent"
       ? "#FF1493"
-      : "#616161";
+      : "#2A2A2A";
 
-  const attendanceLabel =
-    wedding.attendance === "attending"
-      ? "참석"
-      : wedding.attendance === "absent"
-      ? "불참"
-      : "미정";
-
-  const attendanceBg =
-    wedding.attendance === "attending"
-      ? "#1A2600"
-      : wedding.attendance === "absent"
-      ? "#3D0A1E"
-      : "#1A1A1A";
-
-  const dday = getDDay(wedding.date);
-  const upcoming = isUpcoming(wedding.date);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const wDate = new Date(wedding.date + "T00:00:00");
+  const daysUntil = Math.round((wDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 
   return (
     <Link href={`/${wedding.id}`} style={{ textDecoration: "none" }} aria-label={`${wedding.groom} ♥ ${wedding.bride}, ${formatDateKR(wedding.date)}`}>
       <div
         style={{
-          backgroundColor: "#111111",
+          backgroundColor: "#141414",
+          border: "1px solid #2A2A2A",
           borderRadius: 16,
-          padding: 16,
-          borderLeft: `3px solid ${attendanceColor}`,
-          display: "flex",
-          flexDirection: "column",
-          gap: 10,
+          overflow: "hidden",
+          position: "relative",
         }}
       >
-        {/* Top row */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        {/* Left accent strip */}
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: 3,
+            backgroundColor: stripColor,
+          }}
+        />
+
+        <div style={{ padding: "16px 16px 0 18px" }}>
+          {/* Couple names */}
           <span
             style={{
               fontFamily: "var(--font-gaegu), Gaegu, cursive",
               fontSize: 18,
               fontWeight: 700,
               color: "#FFFFFF",
+              display: "block",
+              marginBottom: 8,
             }}
           >
-            {wedding.groom} ♥ {wedding.bride}
+            {wedding.groom} <span style={{ color: "#FF1493" }}>♥</span> {wedding.bride}
           </span>
-          <span
-            style={{
-              fontSize: 11,
-              fontWeight: 600,
-              letterSpacing: "0.04em",
-              padding: "3px 8px",
-              borderRadius: 9999,
-              backgroundColor: upcoming ? "#3D0A1E" : "#1A1A1A",
-              color: upcoming ? "#FF1493" : "#616161",
-            }}
-          >
-            {dday}
-          </span>
+
+          {/* Date + time row */}
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+            <CalendarSmallIcon />
+            <span
+              style={{
+                fontSize: 12,
+                fontWeight: 600,
+                color: "#FF1493",
+                fontFamily: "var(--font-pretendard), Pretendard Variable, sans-serif",
+              }}
+            >
+              {formatDateKR(wedding.date)}
+            </span>
+            {wedding.time && (
+              <span
+                style={{
+                  fontSize: 12,
+                  color: "rgba(255,255,255,0.4)",
+                  fontFamily: "var(--font-pretendard), Pretendard Variable, sans-serif",
+                }}
+              >
+                {wedding.time}
+              </span>
+            )}
+          </div>
+
+          {/* Venue row */}
+          {wedding.venue && (
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <LocationSmallIcon />
+              <span
+                style={{
+                  fontSize: 12,
+                  fontWeight: 500,
+                  color: "#7EB8FF",
+                  fontFamily: "var(--font-pretendard), Pretendard Variable, sans-serif",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {wedding.venue}
+              </span>
+            </div>
+          )}
         </div>
 
-        {/* Bottom row */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <span
-            style={{
-              fontSize: 13,
-              color: "#A3A3A3",
-              fontFamily: "var(--font-pretendard), Pretendard Variable, sans-serif",
-            }}
-          >
-            {formatDateKR(wedding.date)}
-          </span>
-          <span
-            style={{
-              fontSize: 11,
-              fontWeight: 600,
-              letterSpacing: "0.04em",
-              padding: "3px 8px",
-              borderRadius: 9999,
-              backgroundColor: attendanceBg,
-              color: attendanceColor,
-            }}
-          >
-            {attendanceLabel}
-          </span>
+        {/* D-day row */}
+        <div
+          style={{
+            borderTop: "1px solid #2A2A2A",
+            marginTop: 12,
+            padding: "10px 18px",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          {daysUntil >= 0 ? (
+            <span
+              style={{
+                backgroundColor: "#FF1493",
+                borderRadius: 9999,
+                padding: "4px 12px",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                fontSize: 12,
+                fontWeight: 800,
+                color: "#FFFFFF",
+                letterSpacing: "-0.02em",
+                boxShadow: "0 3px 6px rgba(255,20,147,0.4)",
+              }}
+            >
+              <CalendarTinyIcon />
+              {daysUntil === 0 ? "D-Day" : `D-${daysUntil}`}
+            </span>
+          ) : (
+            <span
+              style={{
+                fontSize: 12,
+                color: "rgba(255,255,255,0.2)",
+                fontFamily: "var(--font-pretendard), Pretendard Variable, sans-serif",
+              }}
+            >
+              {Math.abs(daysUntil)}일 전
+            </span>
+          )}
         </div>
-
-        {/* Venue */}
-        {wedding.venue && (
-          <span
-            style={{
-              fontSize: 12,
-              color: "#616161",
-              fontFamily: "var(--font-pretendard), Pretendard Variable, sans-serif",
-            }}
-          >
-            📍 {wedding.venue}
-          </span>
-        )}
       </div>
     </Link>
   );
@@ -365,6 +386,37 @@ function PlusIcon() {
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round">
       <line x1="12" y1="5" x2="12" y2="19" />
       <line x1="5" y1="12" x2="19" y2="12" />
+    </svg>
+  );
+}
+
+function CalendarSmallIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FF1493" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+      <line x1="16" y1="2" x2="16" y2="6" />
+      <line x1="8" y1="2" x2="8" y2="6" />
+      <line x1="3" y1="10" x2="21" y2="10" />
+    </svg>
+  );
+}
+
+function CalendarTinyIcon() {
+  return (
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+      <line x1="16" y1="2" x2="16" y2="6" />
+      <line x1="8" y1="2" x2="8" y2="6" />
+      <line x1="3" y1="10" x2="21" y2="10" />
+    </svg>
+  );
+}
+
+function LocationSmallIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+      <circle cx="12" cy="10" r="3" />
     </svg>
   );
 }

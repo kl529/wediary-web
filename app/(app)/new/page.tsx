@@ -115,14 +115,14 @@ export default function NewWeddingPage({
   return (
     <div className="min-h-screen bg-black">
       <div className="mx-auto max-w-[430px]">
-        {/* Header */}
+        {/* Header: 취소 / title / 저장 */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            padding: "16px 16px 0",
+            justifyContent: "space-between",
+            padding: "16px 20px 0",
             paddingTop: "max(16px, env(safe-area-inset-top))",
-            gap: 12,
           }}
         >
           <button
@@ -130,138 +130,171 @@ export default function NewWeddingPage({
             style={{
               background: "none",
               border: "none",
-              color: "#A3A3A3",
+              color: "rgba(255,255,255,0.5)",
+              fontSize: 16,
               cursor: "pointer",
-              padding: 8,
-              display: "flex",
-              alignItems: "center",
+              padding: "8px 0",
+              fontFamily: "var(--font-pretendard), Pretendard Variable, sans-serif",
             }}
           >
-            <BackIcon />
+            취소
           </button>
-          <h1
+          <span
             style={{
-              fontSize: 18,
-              fontWeight: 700,
+              fontSize: 16,
+              fontWeight: 600,
               color: "#FFFFFF",
               fontFamily: "var(--font-pretendard), Pretendard Variable, sans-serif",
             }}
           >
-            {isEdit ? "결혼식 수정" : "새 결혼식 추가"}
-          </h1>
+            {isEdit ? "결혼식 수정" : "새 결혼식"}
+          </span>
+          <button
+            onClick={handleSubmit}
+            disabled={saving}
+            style={{
+              background: "none",
+              border: "none",
+              color: saving ? "rgba(255,255,255,0.3)" : "#FF1493",
+              fontSize: 16,
+              fontWeight: 700,
+              cursor: saving ? "not-allowed" : "pointer",
+              padding: "8px 0",
+              fontFamily: "var(--font-pretendard), Pretendard Variable, sans-serif",
+            }}
+          >
+            {saving ? "저장 중..." : "저장"}
+          </button>
         </div>
 
         {/* Form */}
-        <div style={{ padding: "24px 16px 100px", display: "flex", flexDirection: "column", gap: 20 }}>
-          {/* Invite URL */}
-          <FormGroup label="청첩장 URL">
+        <div style={{ padding: "20px 20px 60px", display: "flex", flexDirection: "column", gap: 12 }}>
+          {/* Section 1: 청첩장 URL */}
+          <SectionCard label="청첩장 URL">
             <div style={{ display: "flex", gap: 8 }}>
               <input
                 type="url"
                 value={inviteUrl}
                 onChange={(e) => setInviteUrl(e.target.value)}
-                placeholder="https://..."
+                placeholder="청첩장 링크 붙여넣기..."
                 style={inputStyle}
               />
               <button
                 onClick={handleParseInvitation}
                 disabled={parsing || !inviteUrl.trim()}
                 style={{
-                  padding: "12px 14px",
+                  padding: "12px 16px",
                   borderRadius: 12,
-                  border: "1px solid #2A2A2A",
-                  backgroundColor: parsing ? "#1A1A1A" : "#3D0A1E",
-                  color: parsing ? "#616161" : "#FF1493",
-                  fontSize: 13,
-                  fontWeight: 600,
+                  border: parsing || !inviteUrl.trim() ? "none" : "1px solid rgba(255,20,147,0.4)",
+                  backgroundColor: parsing || !inviteUrl.trim() ? "rgba(255,20,147,0.3)" : "rgba(255,20,147,0.2)",
+                  color: parsing || !inviteUrl.trim() ? "rgba(255,255,255,0.2)" : "#FF1493",
+                  fontSize: 14,
+                  fontWeight: 700,
                   cursor: parsing || !inviteUrl.trim() ? "not-allowed" : "pointer",
                   whiteSpace: "nowrap",
                   fontFamily: "var(--font-pretendard), Pretendard Variable, sans-serif",
                 }}
               >
-                {parsing ? "불러오는 중..." : "불러오기"}
+                {parsing ? "..." : "불러오기"}
               </button>
             </div>
-          </FormGroup>
+            {parsing && (
+              <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 12, marginTop: 8 }}>
+                청첩장 정보를 가져오는 중...
+              </p>
+            )}
+          </SectionCard>
 
-          <div style={{ height: 1, backgroundColor: "#2A2A2A" }} />
+          {/* Section 2: 기본 정보 */}
+          <SectionCard label="기본 정보">
+            {/* 신랑 */}
+            <div style={{ marginBottom: 12 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 2, marginBottom: 6 }}>
+                <span style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>신랑</span>
+                <span style={{ fontSize: 12, color: "#FF1493" }}>*</span>
+              </div>
+              <input
+                type="text"
+                value={groom}
+                onChange={(e) => setGroom(e.target.value)}
+                placeholder="이름"
+                style={inputStyle}
+              />
+            </div>
 
-          {/* Groom */}
-          <FormGroup label="신랑 이름 *">
-            <input
-              type="text"
-              value={groom}
-              onChange={(e) => setGroom(e.target.value)}
-              placeholder="홍길동"
-              style={inputStyle}
-            />
-          </FormGroup>
+            {/* 신부 */}
+            <div style={{ marginBottom: 12 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 2, marginBottom: 6 }}>
+                <span style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>신부</span>
+                <span style={{ fontSize: 12, color: "#FF1493" }}>*</span>
+              </div>
+              <input
+                type="text"
+                value={bride}
+                onChange={(e) => setBride(e.target.value)}
+                placeholder="이름"
+                style={inputStyle}
+              />
+            </div>
 
-          {/* Bride */}
-          <FormGroup label="신부 이름 *">
-            <input
-              type="text"
-              value={bride}
-              onChange={(e) => setBride(e.target.value)}
-              placeholder="김영희"
-              style={inputStyle}
-            />
-          </FormGroup>
+            {/* 날짜 + 시간 */}
+            <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
+              <div style={{ flex: 1 }}>
+                <span style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", display: "block", marginBottom: 6 }}>날짜</span>
+                <input
+                  type="date"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  style={{ ...inputStyle, colorScheme: "dark" }}
+                />
+              </div>
+              <div style={{ flex: 1 }}>
+                <span style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", display: "block", marginBottom: 6 }}>시간</span>
+                <input
+                  type="time"
+                  value={time}
+                  onChange={(e) => setTime(e.target.value)}
+                  style={{ ...inputStyle, colorScheme: "dark" }}
+                />
+              </div>
+            </div>
 
-          {/* Date */}
-          <FormGroup label="날짜">
-            <input
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              style={{ ...inputStyle, colorScheme: "dark" }}
-            />
-          </FormGroup>
+            {/* 장소 */}
+            <div>
+              <span style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", display: "block", marginBottom: 6 }}>장소</span>
+              <input
+                type="text"
+                value={venue}
+                onChange={(e) => setVenue(e.target.value)}
+                placeholder="웨딩홀 이름"
+                style={inputStyle}
+              />
+            </div>
+          </SectionCard>
 
-          {/* Time */}
-          <FormGroup label="시간">
-            <input
-              type="time"
-              value={time}
-              onChange={(e) => setTime(e.target.value)}
-              style={{ ...inputStyle, colorScheme: "dark" }}
-            />
-          </FormGroup>
-
-          {/* Venue */}
-          <FormGroup label="장소">
-            <input
-              type="text"
-              value={venue}
-              onChange={(e) => setVenue(e.target.value)}
-              placeholder="그랜드 볼룸"
-              style={inputStyle}
-            />
-          </FormGroup>
-
-          {/* Attendance */}
-          <FormGroup label="참석 여부">
+          {/* Section 3: 참석 여부 */}
+          <SectionCard label="참석 여부">
             <div style={{ display: "flex", gap: 8 }}>
               {(["attending", "absent", "pending"] as Attendance[]).map((a) => {
                 const labels = { attending: "참석", absent: "불참", pending: "미정" };
-                const colors = {
-                  attending: { bg: "#1A2600", text: "#CCFF00", border: "#CCFF00" },
-                  absent: { bg: "#3D0A1E", text: "#FF1493", border: "#FF1493" },
-                  pending: { bg: "#1A1A1A", text: "#616161", border: "#2A2A2A" },
-                };
                 const active = attendance === a;
-                const c = colors[a];
+                const activeStyles: Record<Attendance, { bg: string; text: string; border: string }> = {
+                  attending: { bg: "rgba(163,230,53,0.15)", text: "#A3E635", border: "#A3E635" },
+                  absent: { bg: "rgba(255,20,147,0.15)", text: "#FF1493", border: "#FF1493" },
+                  pending: { bg: "rgba(255,255,255,0.15)", text: "rgba(255,255,255,0.7)", border: "rgba(255,255,255,0.3)" },
+                };
+                const s = activeStyles[a];
                 return (
                   <button
                     key={a}
                     onClick={() => setAttendance(a)}
                     style={{
                       flex: 1,
-                      padding: "10px 0",
-                      borderRadius: 9999,
-                      border: `1px solid ${active ? c.border : "#2A2A2A"}`,
-                      backgroundColor: active ? c.bg : "transparent",
-                      color: active ? c.text : "#616161",
+                      padding: "12px 0",
+                      borderRadius: 12,
+                      border: `1px solid ${active ? s.border : "#2A2A2A"}`,
+                      backgroundColor: active ? s.bg : "#1A1A1A",
+                      color: active ? s.text : "rgba(255,255,255,0.3)",
                       fontSize: 14,
                       fontWeight: 600,
                       cursor: "pointer",
@@ -273,28 +306,7 @@ export default function NewWeddingPage({
                 );
               })}
             </div>
-          </FormGroup>
-
-          {/* Submit */}
-          <button
-            onClick={handleSubmit}
-            disabled={saving}
-            style={{
-              width: "100%",
-              padding: "16px 0",
-              borderRadius: 16,
-              border: "none",
-              backgroundColor: saving ? "#616161" : "#FF1493",
-              color: "#FFFFFF",
-              fontSize: 16,
-              fontWeight: 700,
-              cursor: saving ? "not-allowed" : "pointer",
-              marginTop: 8,
-              fontFamily: "var(--font-pretendard), Pretendard Variable, sans-serif",
-            }}
-          >
-            {saving ? "저장 중..." : "저장하기"}
-          </button>
+          </SectionCard>
         </div>
       </div>
     </div>
@@ -314,29 +326,29 @@ const inputStyle: React.CSSProperties = {
   fontFamily: "var(--font-pretendard), Pretendard Variable, sans-serif",
 };
 
-function FormGroup({ label, children }: { label: string; children: React.ReactNode }) {
+function SectionCard({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-      <label
+    <div
+      style={{
+        backgroundColor: "#111111",
+        border: "1px solid #2A2A2A",
+        borderRadius: 16,
+        padding: 16,
+      }}
+    >
+      <span
         style={{
-          fontSize: 13,
+          fontSize: 11,
           fontWeight: 600,
-          color: "#A3A3A3",
-          letterSpacing: "0.04em",
+          color: "rgba(255,255,255,0.4)",
+          display: "block",
+          marginBottom: 12,
           fontFamily: "var(--font-pretendard), Pretendard Variable, sans-serif",
         }}
       >
         {label}
-      </label>
+      </span>
       {children}
     </div>
-  );
-}
-
-function BackIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="15 18 9 12 15 6" />
-    </svg>
   );
 }

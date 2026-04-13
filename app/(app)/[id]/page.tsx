@@ -25,9 +25,9 @@ const ATTENDANCE_LABEL: Record<Attendance, string> = {
 };
 
 const ATTENDANCE_PILL_ACTIVE: Record<Attendance, { bg: string; border: string; text: string }> = {
-  attending: { bg: "rgba(204,255,0,0.1)", border: "#CCFF00", text: "#CCFF00" },
+  attending: { bg: "rgba(163,230,53,0.15)", border: "#A3E635", text: "#A3E635" },
   absent: { bg: "rgba(255,20,147,0.15)", border: "#FF1493", text: "#FF1493" },
-  pending: { bg: "rgba(255,255,255,0.05)", border: "rgba(255,255,255,0.1)", text: "rgba(255,255,255,0.3)" },
+  pending: { bg: "rgba(255,255,255,0.15)", border: "rgba(255,255,255,0.3)", text: "rgba(255,255,255,0.7)" },
 };
 
 export default function WeddingDetailPage({
@@ -181,7 +181,7 @@ export default function WeddingDetailPage({
             {wedding.groom} ♥ {wedding.bride}
           </span>
 
-          <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+          <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
             {upcoming && (
               <button
                 onClick={() => downloadICS(wedding)}
@@ -361,7 +361,7 @@ export default function WeddingDetailPage({
               <span style={{ color: "rgba(255,255,255,0.2)", fontSize: 10, fontFamily: "var(--font-pretendard), Pretendard Variable, sans-serif" }}>자동 저장</span>
             </div>
             {/* 빠른 선택 */}
-            <div style={{ display: "flex", gap: 6, marginBottom: 12 }}>
+            <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
               {[50000, 100000, 150000, 200000].map((amount) => {
                 const active = giftAmount === String(amount);
                 return (

@@ -61,7 +61,7 @@ export default function SettingsPage() {
           <h1
             style={{
               fontFamily: "var(--font-fredoka), Fredoka, sans-serif",
-              fontSize: 28,
+              fontSize: 24,
               fontWeight: 600,
               color: "#FF1493",
               marginBottom: 16,
@@ -151,7 +151,7 @@ export default function SettingsPage() {
             >
               개인정보처리방침
             </span>
-            <span style={{ color: "rgba(255,255,255,0.3)", fontSize: 18 }}>›</span>
+            <span style={{ color: "rgba(255,255,255,0.3)", fontSize: 16 }}>›</span>
           </Link>
 
           {/* Logout */}
