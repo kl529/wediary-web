@@ -143,13 +143,13 @@ export default function NewWeddingPage({
               background: "none",
               border: "none",
               color: "rgba(255,255,255,0.5)",
-              fontSize: 16,
               cursor: "pointer",
-              padding: "8px 0",
-              fontFamily: "var(--font-pretendard), Pretendard Variable, sans-serif",
+              padding: 8,
+              display: "flex",
+              alignItems: "center",
             }}
           >
-            취소
+            <CloseIcon />
           </button>
           <span
             style={{
@@ -168,14 +168,13 @@ export default function NewWeddingPage({
               background: "none",
               border: "none",
               color: saving ? "rgba(255,255,255,0.3)" : "#FF1493",
-              fontSize: 16,
-              fontWeight: 700,
               cursor: saving ? "not-allowed" : "pointer",
-              padding: "8px 0",
-              fontFamily: "var(--font-pretendard), Pretendard Variable, sans-serif",
+              padding: 8,
+              display: "flex",
+              alignItems: "center",
             }}
           >
-            {saving ? "저장 중..." : "저장"}
+            <CheckIcon color={saving ? "rgba(255,255,255,0.3)" : "#FF1493"} />
           </button>
         </div>
 
@@ -419,5 +418,22 @@ function SectionCard({ label, children }: { label: string; children: React.React
       </span>
       {children}
     </div>
+  );
+}
+
+function CloseIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
+  );
+}
+
+function CheckIcon({ color }: { color: string }) {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
   );
 }
