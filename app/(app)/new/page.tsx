@@ -4,8 +4,9 @@ import { use, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getWedding, createWedding, updateWedding } from "@/lib/db";
+import { downloadICS } from "@/lib/calendar";
 import { useToast } from "@/components/Toast";
-import type { Attendance } from "@/lib/types";
+import type { Attendance, Wedding } from "@/lib/types";
 
 export default function NewWeddingPage({
   searchParams,
@@ -27,6 +28,8 @@ export default function NewWeddingPage({
   const [inviteUrl, setInviteUrl] = useState("");
   const [saving, setSaving] = useState(false);
   const [parsing, setParsing] = useState(false);
+  const [showCalendarModal, setShowCalendarModal] = useState(false);
+  const [createdWedding, setCreatedWedding] = useState<Wedding | null>(null);
 
   const { data: existing } = useQuery({
     queryKey: ["wedding", id],
@@ -102,8 +105,17 @@ export default function NewWeddingPage({
           invite_url: inviteUrl.trim() || null,
         });
         queryClient.invalidateQueries({ queryKey: ["weddings"] });
-        showToast("저장되었어요", "success");
-        router.push(`/${newWedding.id}`);
+        // Check if wedding date is upcoming → show calendar modal
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const wDate = new Date(date + "T00:00:00");
+        if (wDate >= today) {
+          setCreatedWedding(newWedding);
+          setShowCalendarModal(true);
+        } else {
+          showToast("저장되었어요", "success");
+          router.push(`/${newWedding.id}`);
+        }
       }
     } catch {
       showToast("저장에 실패했어요", "error");
@@ -308,6 +320,63 @@ export default function NewWeddingPage({
             </div>
           </SectionCard>
         </div>
+
+        {/* Calendar Modal */}
+        {showCalendarModal && createdWedding && (
+          <div
+            style={{
+              position: "fixed",
+              inset: 0,
+              backgroundColor: "rgba(0,0,0,0.8)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 50,
+              padding: 24,
+            }}
+          >
+            <div
+              style={{
+                backgroundColor: "#111111",
+                borderRadius: 20,
+                padding: 24,
+                width: "100%",
+                maxWidth: 320,
+                border: "1px solid #2A2A2A",
+              }}
+            >
+              <h3 style={{ color: "#FFFFFF", fontSize: 18, fontWeight: 700, marginBottom: 8, fontFamily: "var(--font-pretendard), Pretendard Variable, sans-serif" }}>
+                캘린더에 추가할까요?
+              </h3>
+              <p style={{ color: "#A3A3A3", fontSize: 14, marginBottom: 24, lineHeight: 1.6, fontFamily: "var(--font-pretendard), Pretendard Variable, sans-serif" }}>
+                저장된 결혼식 일정을 기기 캘린더에 추가할 수 있어요.
+              </p>
+              <div style={{ display: "flex", gap: 8 }}>
+                <button
+                  onClick={() => {
+                    setShowCalendarModal(false);
+                    showToast("등록됐어요", "success");
+                    router.push(`/${createdWedding.id}`);
+                  }}
+                  style={{ flex: 1, padding: "12px 0", borderRadius: 12, border: "1px solid #2A2A2A", backgroundColor: "transparent", color: "#A3A3A3", fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "var(--font-pretendard), Pretendard Variable, sans-serif" }}
+                >
+                  건너뛰기
+                </button>
+                <button
+                  onClick={() => {
+                    downloadICS(createdWedding);
+                    setShowCalendarModal(false);
+                    showToast("등록됐어요", "success");
+                    router.push(`/${createdWedding.id}`);
+                  }}
+                  style={{ flex: 1, padding: "12px 0", borderRadius: 12, border: "none", backgroundColor: "#FF1493", color: "#FFFFFF", fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "var(--font-pretendard), Pretendard Variable, sans-serif" }}
+                >
+                  추가
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

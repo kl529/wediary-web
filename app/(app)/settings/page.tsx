@@ -4,12 +4,14 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { usePWAInstall } from "@/hooks/usePWAInstall";
 
 export default function SettingsPage() {
   const router = useRouter();
   const [email, setEmail] = useState<string | null>(null);
   const [name, setName] = useState<string | null>(null);
   const [loggingOut, setLoggingOut] = useState(false);
+  const { canInstall, install } = usePWAInstall();
 
   useEffect(() => {
     const supabase = createClient();
@@ -128,6 +130,35 @@ export default function SettingsPage() {
             )}
           </div>
 
+          {/* Install PWA */}
+          {canInstall && (
+            <div
+              onClick={install}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: 16,
+                backgroundColor: "rgba(255,20,147,0.1)",
+                border: "1px solid rgba(255,20,147,0.3)",
+                borderRadius: 16,
+                cursor: "pointer",
+              }}
+            >
+              <span
+                style={{
+                  fontSize: 14,
+                  fontWeight: 600,
+                  color: "#FF1493",
+                  fontFamily: "var(--font-pretendard), Pretendard Variable, sans-serif",
+                }}
+              >
+                앱 설치하기
+              </span>
+              <DownloadIcon />
+            </div>
+          )}
+
           {/* Privacy */}
           <Link
             href="/privacy"
@@ -204,10 +235,12 @@ function BackIcon() {
   );
 }
 
-function ChevronRight() {
+function DownloadIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#616161" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="9 18 15 12 9 6" />
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF1493" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="7 10 12 15 17 10" />
+      <line x1="12" y1="15" x2="12" y2="3" />
     </svg>
   );
 }
