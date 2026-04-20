@@ -13,7 +13,25 @@ const withPWA = withPWAInit({
 });
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // PostHog 요청을 ad-blocker 우회를 위해 프록시 처리
+  async rewrites() {
+    return [
+      {
+        source: "/ingest/static/:path*",
+        destination: "https://us-assets.i.posthog.com/static/:path*",
+      },
+      {
+        source: "/ingest/:path*",
+        destination: "https://us.i.posthog.com/:path*",
+      },
+      {
+        source: "/ingest/decide",
+        destination: "https://us.i.posthog.com/decide",
+      },
+    ];
+  },
+  // PostHog 요청을 buffering 없이 즉시 전달
+  skipTrailingSlashRedirect: true,
 };
 
 export default withPWA(nextConfig);
