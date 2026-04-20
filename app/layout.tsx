@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Fredoka, Gaegu } from "next/font/google";
+import { Suspense } from "react";
 import "./globals.css";
+import { PostHogProvider } from "./_components/PostHogProvider";
 
 const fredoka = Fredoka({
   subsets: ["latin"],
@@ -48,7 +50,11 @@ export default function RootLayout({
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <Suspense>
+          <PostHogProvider>{children}</PostHogProvider>
+        </Suspense>
+      </body>
     </html>
   );
 }
