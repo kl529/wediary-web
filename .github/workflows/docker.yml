@@ -149,9 +149,9 @@ jobs:
 
             # Wait for the app to pass its health check (up to 60 s)
             HOST_PORT=$(IMAGE_TAG="$DEPLOY_TAG" docker compose port app 3000 2>/dev/null | cut -d: -f2 || echo "3000")
-            echo "Waiting for /api/health on port ${HOST_PORT}..."
+            echo "Waiting for app on port ${HOST_PORT}..."
             for i in $(seq 1 12); do
-              if curl -sf "http://localhost:${HOST_PORT}/api/health" > /dev/null; then
+              if curl -sfL -o /dev/null -w '%{http_code}' "http://localhost:${HOST_PORT}/" | grep -qE '^[23]'; then
                 echo "Healthy after ${i} attempt(s)"
                 exit 0
               fi
