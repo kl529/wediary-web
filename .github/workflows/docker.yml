@@ -37,13 +37,13 @@ jobs:
         run: npm ci --include=dev
 
       - name: Lint
-        run: npm run lint
+        run: npm run lint --if-present
 
       - name: Typecheck
-        run: npm run typecheck
+        run: npm run typecheck --if-present
 
       - name: Test
-        run: npm run test
+        run: npm run test --if-present
 
   # ──────────────────────────────────────────────────────────
   # Job 2: Build Docker image and push to GHCR

@@ -1,11 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [anonLoading, setAnonLoading] = useState(false);
 
@@ -114,23 +113,12 @@ export default function LoginPage() {
           }}
         >
           로그인하면{" "}
-          <a href="/privacy" style={{ color: "#A3A3A3", textDecoration: "underline" }}>
+          <Link href="/privacy" style={{ color: "#A3A3A3", textDecoration: "underline" }}>
             개인정보처리방침
-          </a>
+          </Link>
           에 동의하는 것으로 간주됩니다
         </p>
       </div>
     </div>
-  );
-}
-
-function KakaoIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-      <path
-        d="M9 1.5C4.858 1.5 1.5 4.134 1.5 7.392c0 2.088 1.356 3.924 3.402 4.974l-.864 3.222a.188.188 0 0 0 .288.204l3.864-2.556c.258.03.522.048.81.048 4.142 0 7.5-2.634 7.5-5.892S13.142 1.5 9 1.5z"
-        fill="#000000"
-      />
-    </svg>
   );
 }
